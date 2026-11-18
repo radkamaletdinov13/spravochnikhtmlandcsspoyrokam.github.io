@@ -1,0 +1,1497 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Справочник HTML и CSS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@600&family=JetBrains+Mono:wght@400;500&family=Open+Sans:wght@600&family=Roboto:wght@300&display=swap">
+<style>
+/* Layout: одна колонка. Сверху прокручиваемые вкладки (по урокам), ниже выбранная тема: теория, затем примеры: код с комментариями, результат на экране, разбор слов из кода и пояснение. */
+:root {
+  --bg: #f5f6f3;
+  --surface: #ffffff;
+  --fg: #1b2320;
+  --muted: #5b6760;
+  --line: #d8ddd6;
+  --accent: #0b7a75;
+  --accent-soft: #d6efec;
+  --on-accent: #ffffff;
+  --code-bg: #101a18;
+  --code-fg: #d7e5df;
+  --mark: #e8590c;
+  --warn-bg: #fdf0e6;
+  --font-body: "Onest", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-display: "Unbounded", "Onest", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121816;
+    --surface: #1a2220;
+    --fg: #e6ece8;
+    --muted: #9aa7a0;
+    --line: #2d3835;
+    --accent: #4fd1c5;
+    --accent-soft: #16403c;
+    --on-accent: #07201d;
+    --code-bg: #0b1110;
+    --code-fg: #d7e5df;
+    --warn-bg: #2b1f17;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121816;
+  --surface: #1a2220;
+  --fg: #e6ece8;
+  --muted: #9aa7a0;
+  --line: #2d3835;
+  --accent: #4fd1c5;
+  --accent-soft: #16403c;
+  --on-accent: #07201d;
+  --code-bg: #0b1110;
+  --code-fg: #d7e5df;
+  --warn-bg: #2b1f17;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.page { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(24px, 6vw, 32px); line-height: 1.15; text-wrap: balance; margin: 0 0 8px; }
+h2 { font-size: 22px; line-height: 1.25; margin: 0 0 4px; text-wrap: balance; }
+p { margin: 0; max-width: 65ch; }
+.lead { color: var(--muted); }
+
+code.i { font-family: var(--font-mono); font-size: .88em; background: var(--accent-soft); padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere; }
+
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+.tab {
+  flex: none; font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer;
+}
+.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.tab:focus-visible, .copy:focus-visible { outline: 3px solid var(--mark); outline-offset: 2px; }
+
+#panel { display: flex; flex-direction: column; gap: 30px; min-width: 0; }
+.theory { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-left: 4px solid var(--accent); background: var(--surface); border-radius: 0 8px 8px 0; }
+
+.ex { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ex-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.ex h3 { margin: 0; font-size: 17px; }
+.badge { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.block { min-width: 0; }
+.block-head, .preview-label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.block-head span, .preview-label { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.copy {
+  font: inherit; font-size: 13px; padding: 4px 10px; border-radius: 6px;
+  border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer;
+}
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-fg);
+  font-family: var(--font-mono); font-size: 13px; line-height: 1.65;
+  padding: 12px 14px; border-radius: 8px; tab-size: 2;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+
+/* Окно с живым результатом: изолировано, стили примера не влияют на справочник */
+.preview-wrap { min-width: 0; }
+.preview { border: 2px solid var(--accent); border-radius: 8px; background: #ffffff; overflow-x: auto; }
+.hint { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* Разбор слов из кода */
+.gloss { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; min-width: 0; }
+.gloss-title { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+.gloss ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.gloss li { font-size: 15px; line-height: 1.45; }
+
+.warn { background: var(--warn-bg); border-left: 4px solid var(--mark); border-radius: 0 8px 8px 0; padding: 10px 14px; }
+.warn::before { content: "Важно: "; font-weight: 600; color: var(--mark); }
+.note { color: var(--fg); padding-left: 2px; }
+.note::before { content: "Как читать: "; font-weight: 600; color: var(--accent); }
+.src { font-size: 14px; color: var(--muted); }
+.src a { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="page">
+  <header>
+    <div class="eyebrow">Шпаргалка по урокам 1–10</div>
+    <h1>Справочник HTML и CSS</h1>
+    <p class="lead">Собран по десяти урокам: вкладки идут в том же порядке. В каждой сначала теория, потом примеры: код с пояснениями прямо в строках, результат на экране и разбор каждого слова из кода. Метка «Дополнение» значит, что этого нет в уроках, метка «Из интернета» значит, что сверено с документацией, источник указан.</p>
+  </header>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Темы"></div>
+  <main id="panel"></main>
+</div>
+
+<script>
+var DT = '<!DOC' + 'TYPE html>';
+var IMG_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82c4"/><stop offset="1" stop-color="#85d6e5"/></linearGradient></defs><rect width="300" height="200" fill="url(#g)"/><circle cx="150" cy="85" r="38" fill="#ffffff" opacity=".85"/><rect x="60" y="140" width="180" height="16" rx="8" fill="#ffffff" opacity=".85"/></svg>';
+var IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(IMG_SVG);
+
+var SECTIONS = [
+/* ===================== УРОК 1 ===================== */
+{
+  id: 'l1', title: '1 Основы HTML',
+  theory: [
+    '**Frontend** это то, что видит пользователь (HTML, CSS, JavaScript). **Backend** работает на сервере (PHP, MySQL, Python): хранит данные и отдаёт их по запросу. Чтобы сайт увидели другие, его размещают на **хостинге** (место для файлов сайта, доступное круглосуточно). Адрес сайта это **домен**, например google.com.',
+    '**HTML** (HyperText Markup Language) это язык разметки, а не язык программирования: он описывает, что показать на странице. Страница это текстовый документ с тегами. Браузер читает его построчно (интерпретирует). Актуальный стандарт: HTML5.',
+    'Код пишут в редакторе (Notepad++, Visual Studio Code) или онлайн в **CodePen**: там три окна (HTML, CSS, JS) и результат виден сразу. В CodePen в окно HTML пишут только содержимое {{body}}, без каркаса.'
+  ],
+  examples: [
+    { cap: 'Каркас HTML-страницы',
+      html: `${DT}   <!-- не тег, а инструкция браузеру: страница на HTML5 -->
+<html>   <!-- внутри лежит всё содержимое страницы -->
+<head>   <!-- служебная информация для браузера, на странице не видна -->
+<meta charset="utf-8">   <!-- кодировка: чтобы русские буквы читались -->
+<title>Example</title>   <!-- название вкладки браузера -->
+</head>
+<body>   <!-- здесь всё, что видно на странице -->
+</body>
+</html>`,
+      demo: { html: 'Всё, что лежит в body, видно на странице. Остальное служебное.' },
+      warn: 'В уроке сказано, что теги без закрытия называются «парными». Наоборот: **парные** теги имеют открывающий и закрывающий ({{<p>…</p>}}), а теги без закрывающего ({{br}}, {{hr}}, {{img}}, {{meta}}) называются **одиночными**.',
+      note: 'Каркас всегда один и тот же: {{html}} содержит {{head}} (служебное) и {{body}} (видимое).' },
+    { cap: 'Тег meta и его атрибуты',
+      html: `<meta charset="utf-8">   <!-- кодировка символов -->
+<meta name="viewport" content="width=device-width, initial-scale=1">   <!-- на телефоне страница подстраивается под ширину экрана -->
+<meta name="description" content="Союзмультфильм">   <!-- краткое описание для поисковиков -->
+<meta name="keywords" content="Союзмультфильм, мультфильм">   <!-- ключевые слова для поисковиков -->
+<meta name="author" content="Alex">   <!-- автор документа -->`,
+      nopreview: true,
+      note: 'Тег {{meta}} стоит в {{head}} и ничего не показывает на странице. Атрибут {{name}} говорит, что за настройка, а {{content}} задаёт её значение.' },
+    { cap: 'Заголовки h1–h6',
+      html: `<h1>СОЮЗМУЛЬТФИЛЬМ</h1>   <!-- самый главный, один на странице -->
+<h2>СОЮЗМУЛЬТФИЛЬМ</h2>
+<h3>СОЮЗМУЛЬТФИЛЬМ</h3>
+<h4>СОЮЗМУЛЬТФИЛЬМ</h4>
+<h5>СОЮЗМУЛЬТФИЛЬМ</h5>
+<h6>СОЮЗМУЛЬТФИЛЬМ</h6>   <!-- самый мелкий -->`,
+      note: 'Цифра после {{h}} это уровень заголовка: чем больше цифра, тем мельче и менее важен заголовок.' },
+    { cap: 'Абзацы, полужирный, курсив, линия и перенос',
+      html: `<p>   <!-- абзац -->
+  <b>Простоквашино</b>, продолжение любимого сериала.   <!-- b: полужирный -->
+  Появилась <i>Вера Павловна</i>, сестрёнка <i>Дяди Фёдора</i>.   <!-- i: курсив -->
+</p>
+<hr>   <!-- горизонтальная линия, закрывающего тега нет -->
+<p>Первая строка<br>вторая строка</p>   <!-- br переносит строку, но не создаёт новый абзац -->`,
+      note: '{{b}} и {{i}} можно ставить на одно слово или на целый абзац. {{br}} нужен для переноса строк, а для разделения абзацев есть {{p}}.' }
+  ]
+},
+/* ===================== УРОК 2 ===================== */
+{
+  id: 'l2', title: '2 CSS',
+  theory: [
+    '**CSS** (Cascading Style Sheets, каскадные таблицы стилей) отвечает за внешний вид: шрифт, цвет, отступы, скругления, границы, тень. Он отделяет оформление от структуры страницы. Правило состоит из **селектора** (что красить), фигурных скобок и пар «свойство: значение;».',
+    '**Комментарии в CSS**: {{/* текст */}}. Ими подписывают части кода или временно отключают свойства: закомментированный код не применяется.',
+    'Цвет задают **именем** ({{red}}, {{tomato}}, {{BurlyWood}}) или **HEX-кодом** ({{#DEB887}}): шесть цифр и букв (0-9 и A-F), по две на красный, зелёный и синий. Нужный код ищут в палитре, например по запросу «hex color» в Google.',
+    '**Padding** (отступы) это расстояние от содержимого до края блока. **Margin** (поля) это расстояние между блоками или от края экрана. Задаются в px, em, % и других единицах.'
+  ],
+  examples: [
+    { cap: 'Первое правило и комментарии',
+      html: `<p>Абзац текста</p>`,
+      css: `/* ---------- АБЗАЦЫ ---------- */
+p {                    /* селектор p: красим все абзацы */
+  color: red;          /* цвет текста */
+  font-size: 15px;     /* размер шрифта: можно 15px, 1em или small */
+}
+
+/*
+p { color: blue; }     это закомментировано и не работает
+*/`,
+      note: 'Внутри фигурных скобок каждая строка заканчивается точкой с запятой. Три примера значений: {{color: red}}, {{color: green}}, {{color: blue}}.' },
+    { cap: 'Цвет фона: имя и HEX',
+      html: `<p>Цвет фона задан для всей страницы (body).</p>`,
+      css: `body {
+  background-color: BurlyWood;   /* цвет фона страницы по имени */
+}
+
+/* то же самое HEX-кодом:
+body {
+  background-color: #DEB887;
+}
+*/`,
+      note: 'Имя {{BurlyWood}} и код {{#DEB887}} это один и тот же цвет. Кодов гораздо больше, чем имён, поэтому HEX даёт больше оттенков.' },
+    { cap: 'Как записывать padding и margin',
+      html: `<div class="wrap">
+  <div class="a">padding: 20px</div>
+  <div class="b">padding: 20px 10px</div>
+  <div class="c">padding: 20px 10px 25px</div>
+  <div class="d">padding: 20px 10px 25px 5px</div>
+</div>`,
+      css: `.wrap { background: #ddd; }
+.a, .b, .c, .d { background: #3b82c4; color: #fff; margin-bottom: 8px; }
+.a { padding: 20px; }              /* одно число: все четыре стороны */
+.b { padding: 20px 10px; }         /* два: верх и низ 20, лево и право 10 */
+.c { padding: 20px 10px 25px; }    /* три: верх 20, лево и право 10, низ 25 */
+.d { padding: 20px 10px 25px 5px; }/* четыре по часовой: верх, право, низ, лево */`,
+      note: 'Поля {{margin}} записываются точно так же. Если нужна одна сторона: {{padding-top}}, {{padding-right}}, {{padding-bottom}}, {{padding-left}} (и такие же для {{margin}}).' },
+    { cap: 'Выравнивание текста',
+      html: `<p style="text-align: left;">Текст слева</p>   <!-- style: CSS прямо в теге -->
+<p style="text-align: right;">Текст справа</p>
+<p style="text-align: center;">Текст по центру</p>
+<p style="text-align: justify;">Текст по ширине: растягивается от левого края до правого, пока строка не закончится, а потом переходит на следующую.</p>`,
+      note: 'Свойство {{text-align}} принимает {{left}}, {{right}}, {{center}}, {{justify}}. В CSS3 есть ещё {{start}} и {{end}} (начало и конец строки).' },
+    { cap: 'Фоновая картинка',
+      html: `<div class="hero">Фоновая картинка</div>`,
+      css: `.hero {
+  background-image: url("images/image.jpg");   /* путь к картинке: папка images рядом с html */
+  background-repeat: no-repeat;                /* не повторять картинку */
+  background-size: 120px;                      /* размер картинки */
+  background-position: right center;           /* положение: по горизонтали, по вертикали */
+  /* background-attachment: fixed;                картинка не двигается при прокрутке */
+  height: 140px;                               /* высота блока */
+  border: 2px solid #3b82c4;                   /* рамка, чтобы видеть границу блока */
+}`,
+      note: 'Если картинка маленькая, без {{no-repeat}} она размножится. Положение можно задать словами ({{right center}}) или числами ({{500px 1px}}), но числа на разных экранах ведут себя по-разному. В CodePen картинку сначала загружают на сервис картинок (например, postimages.org) и вставляют прямую ссылку.' }
+  ]
+},
+/* ===================== УРОК 3 ===================== */
+{
+  id: 'l3', title: '3 Списки и картинки',
+  theory: [
+    'Структура проекта на компьютере: файл {{.html}} и две папки: {{css}} (внутри {{style.css}}) и {{img}} (все картинки). Файл стилей подключают строкой {{link}} в {{head}}.',
+    '{{ul}} это маркированный список, {{ol}} нумерованный, {{li}} один пункт. Маркеры: {{disc}}, {{circle}}, {{square}}, {{none}} (убрать). Нумерация: {{decimal}} (по умолчанию), {{lower-roman}}, {{upper-roman}}, буквы.',
+    'Картинку вставляют тегом {{img}} (одиночный). Обязательны {{src}} (адрес) и {{alt}} (текст, который покажется, если картинка не загрузилась).'
+  ],
+  examples: [
+    { cap: 'Структура папок и подключение стилей',
+      files: [{ label: 'Папки проекта', text: `мой-сайт/
+├─ index.html      главная страница
+├─ css/
+│   └─ style.css   файл со стилями
+└─ img/
+    └─ photo.png   картинки` }],
+      html: `<head>
+  <link rel="stylesheet" type="text/css" href="css/style.css">   <!-- путь к файлу стилей -->
+</head>`,
+      nopreview: true,
+      note: 'Путь {{css/style.css}} читается так: «в папке css лежит файл style.css». Атрибут {{type="text/css"}} в HTML5 можно не писать.' },
+    { cap: 'Маркированный и нумерованный списки со стилями',
+      html: `<ul>   <!-- маркированный -->
+  <li>Три богатыря</li>
+  <li>Фиксики</li>
+  <li>Маша и медведь</li>
+</ul>
+
+<ol>   <!-- нумерованный -->
+  <li>Три кота</li>
+  <li>Барбоскины</li>
+  <li>Ми-ми-мишки</li>
+</ol>`,
+      css: `ul, ol {
+  padding: 15px;                 /* отступ внутри списка */
+  margin: 3px;                   /* зазор снаружи */
+  background: #2e5cb8;           /* синий фон списка */
+}
+ul { list-style: disc; }         /* точки; ещё есть circle, square, none */
+ol { list-style: lower-roman; }  /* римские цифры, по умолчанию decimal */
+ul li, ol li {                   /* пункты внутри списков */
+  padding: 5px;                  /* отступ внутри пункта */
+  margin: 5px 15px;              /* зазор: 5 сверху и снизу, 15 по бокам */
+  background: #ebf0fa;           /* светлый фон пункта */
+}`,
+      note: '{{ul li}} читается «все li внутри ul». Список можно красить как любую коробку: фон, отступы, поля.' },
+    { cap: 'Навигационное меню из списка',
+      html: `<ul>
+  <li><a href="#">Главная</a></li>   <!-- ссылка внутри пункта -->
+  <li><a href="#">О нас</a></li>
+  <li><a href="#">Контакты</a></li>
+</ul>`,
+      css: `ul, li {
+  margin: 0;                /* убираем внешние отступы */
+  padding: 0;               /* убираем внутренние отступы */
+}
+ul {
+  list-style: none;         /* убираем маркеры */
+  width: 100%;              /* меню на всю ширину */
+}
+li {
+  float: left;              /* пункты встают в ряд слева направо */
+  width: auto;              /* ширина по содержимому */
+}
+a {
+  background: #30A6E6;      /* голубой фон кнопки */
+  color: #FFFFFF;           /* белый текст */
+  display: block;           /* ссылка заполняет весь пункт */
+  font: bold 13px sans-serif;   /* сразу: жирный, 13px, шрифт без засечек */
+  padding: 10px 25px;       /* отступ внутри кнопки */
+  text-align: center;       /* текст по центру */
+  text-decoration: none;    /* убираем подчёркивание */
+}
+li:hover a {                /* когда навели на пункт */
+  background: #000000;      /* ссылка внутри него становится чёрной */
+}`,
+      demo: { html: `<ul>
+  <li><a href="#">Главная</a></li>
+  <li><a href="#">О нас</a></li>
+  <li><a href="#">Контакты</a></li>
+</ul>
+<div style="clear: both;"></div>` },
+      hint: 'Наведи на пункт меню или нажми на него.',
+      note: 'Меню это просто список ссылок. {{float: left}} ставит пункты в ряд, {{display: block}} растягивает ссылку на весь пункт, а {{li:hover a}} даёт отклик при наведении.' },
+    { cap: 'Картинка: теги и атрибуты',
+      html: `<img src="img/luntik.png" alt="Лунтик" width="150" align="left" vspace="5" draggable="false">
+<!-- src: адрес картинки (обязательно) -->
+<!-- alt: текст, если картинка не загрузилась (обязательно) -->
+<!-- width: ширина; если задать только её, высота подстроится сама -->
+<!-- align: положение, left: слева от текста -->
+<!-- vspace и hspace: пустое место сверху-снизу и по бокам -->
+<!-- draggable="false": картинку нельзя перетащить мышкой -->
+<p>Текст рядом с картинкой обтекает её справа. Так картинка выглядит внутри абзаца, когда она прижата влево.</p>`,
+      warn: 'Атрибуты {{align}}, {{vspace}}, {{hspace}} устарели в HTML5. Сейчас вместо них пишут CSS: {{float: left}} и {{margin}} (смотри следующий пример).',
+      note: 'Одиночный тег {{img}} закрывающего не имеет.' },
+    { cap: 'Оформление картинки: рамка, скругление, тень',
+      html: `<div class="box">
+  <img class="pic" src="img/luntik.png" alt="Лунтик" width="120">
+  <p>Текст рядом с картинкой: она слева, вокруг неё отступы, скруглённые углы, рамка и тень.</p>
+</div>`,
+      css: `.box { overflow: hidden; }          /* блок охватывает обтекаемую картинку */
+.pic {
+  float: left;                       /* картинка слева, текст обтекает справа */
+  margin: 0 30px 15px 15px;          /* поля: сверху 0, справа 30, снизу 15, слева 15 */
+  background-color: #ffe8ff;         /* фон (виден у прозрачных png) */
+  box-shadow: 10px 10px 15px 0px #780778;   /* тень: сдвиг x, сдвиг y, размытие, размер, цвет */
+  border-radius: 50px 5px 50px 5px;  /* скругление углов: сверху-слева и дальше по часовой */
+  border: 2px solid #fcb8fc;         /* рамка: толщина, вид линии, цвет */
+}`,
+      note: 'Тень принимает пять значений. Положительный сдвиг двигает тень вправо и вниз, отрицательный влево и вверх. Чем больше размытие, тем мягче тень. Если в {{border-radius}} одно число, скругляются все углы. Удобный генератор кода: cssmatic.com/border-radius.' },
+    { cap: 'Картинка как ссылка',
+      html: `<a href="https://example.com">   <!-- ссылка окружает картинку -->
+  <img src="img/cartoon.png" alt="Мультфильм" width="150">
+</a>`,
+      hint: 'Ссылка в примере никуда не ведёт.',
+      note: 'Тег {{a}} можно обернуть вокруг чего угодно: текста, картинки, целого блока.' }
+  ]
+},
+/* ===================== УРОК 4 ===================== */
+{
+  id: 'l4', title: '4 Классы и блоки',
+  theory: [
+    '**Селектор** это элемент или группа элементов, к которым применяется стиль. В CSS перед именем класса ставят **точку** ({{.имя}}), перед именем id **решётку** ({{#имя}}). В HTML пишут {{class="имя"}} или {{id="имя"}}. Регистр букв важен.',
+    '**id** должен быть уникальным: один раз на странице, и он важнее класса. **class** можно использовать много раз и комбинировать. Если у классов одинаковые свойства, побеждает то, что записано в CSS ниже.',
+    '**Блочная вёрстка**: страница строится из блоков {{div}}: хедер, меню, контент, сайдбар, футер. Ширину блоков задают в процентах, чтобы страница была **адаптивной** (подстраивалась под размер экрана). В HTML5 вместо {{div}} с id есть теги {{header}}, {{nav}}, {{main}}, {{aside}}, {{footer}}.'
+  ],
+  examples: [
+    { cap: 'Класс и идентификатор',
+      html: `<p class="custom-class">Первый абзац: класс.</p>   <!-- class: можно повторять -->
+<p id="custom-id">Второй абзац: идентификатор.</p>   <!-- id: только один раз -->
+<p class="custom-class">Третий абзац: тот же класс.</p>`,
+      css: `p {
+  padding: 15px;           /* отступ внутри всех абзацев */
+  margin: 15px;            /* зазор вокруг всех абзацев */
+}
+.custom-class {            /* точка: класс */
+  background-color: #42b0ff;
+  border: 4px double black;    /* двойная рамка */
+}
+#custom-id {               /* решётка: id */
+  background-color: #42b0ff;
+  border: 4px outset #afdeff;  /* выпуклая рамка */
+}`,
+      note: 'Первый и третий абзацы получили оформление из одного правила {{.custom-class}}, а второй из {{#custom-id}}. Правило {{p}} подействовало на все три.' },
+    { cap: 'Структура сайта из блоков div',
+      html: `<div id="container">   <!-- главная коробка -->
+  <div id="header"><h2>Шапка сайта</h2></div>
+  <div id="navigation"><h2>Навигация</h2></div>
+  <div id="content"><h2>Контент</h2></div>
+  <div id="sidebar"><h2>Сайдбар</h2></div>
+  <div id="clear"></div>   <!-- пустой блок: останавливает обтекание -->
+  <div id="footer"><h2>Подвал сайта</h2></div>
+</div>`,
+      css: `h2 { margin: auto; }              /* поля у заголовков второго уровня */
+div {
+  margin-top: 2px;                /* зазор между блоками */
+  text-align: center;             /* текст по центру */
+}
+#container { width: auto; }       /* ширина по экрану: страница адаптивная */
+#header {
+  background: #85D6E5;
+  height: 150px;
+}
+#navigation {
+  background: #afdeff;
+  height: 40px;
+}
+#content {
+  background: #85D6E5;
+  float: left;                    /* блок слева */
+  width: 75%;                     /* три четверти ширины */
+  height: 250px;
+}
+#sidebar {
+  background: #9fd5fc;
+  float: right;                   /* блок справа */
+  width: 25%;                     /* оставшаяся четверть */
+  height: 250px;
+}
+#clear { clear: both; }           /* дальше только под плавающими блоками */
+#footer {
+  margin-top: 4px;
+  background: #75c9d8;
+  height: 150px;
+}`,
+      note: 'Проценты дают адаптивность: 75% + 25% = 100% ширины экрана при любом размере. Без блока {{clear}} подвал «подтянулся» бы наверх к колонкам.' },
+    { cap: 'Те же блоки через теги HTML5',
+      html: `<header>Шапка сайта</header>   <!-- вместо div id="header" -->
+<nav>Навигация</nav>   <!-- вместо div id="navigation" -->
+<div class="layout">   <!-- обёртка для двух колонок -->
+  <main>Контент</main>   <!-- вместо div id="content" -->
+  <aside>Сайдбар</aside>   <!-- вместо div id="sidebar" -->
+</div>
+<footer>Подвал сайта</footer>   <!-- вместо div id="footer" -->`,
+      css: `header, nav, main, aside, footer {
+  text-align: center;
+  margin-top: 2px;
+}
+header { background: #85D6E5; padding: 40px 0; }
+nav { background: #afdeff; padding: 10px 0; }
+.layout { display: flex; }          /* колонки в один ряд, clear не нужен */
+main { width: 75%; background: #85D6E5; padding: 50px 0; }
+aside { width: 25%; background: #9fd5fc; padding: 50px 0; }
+footer { background: #75c9d8; padding: 40px 0; }`,
+      tag: 'extra',
+      note: 'Теги HTML5 заменяют {{div}} с id и делают код понятнее. Для колонок вместо {{float}} здесь взят {{flex}}: он проще и не требует пустого блока с {{clear}}.' }
+  ]
+},
+/* ===================== УРОК 5 ===================== */
+{
+  id: 'l5', title: '5 Блог',
+  theory: [
+    '**Шаблон** это готовый HTML-код страницы, из которого делают свой сайт: добавляют свой текст, картинки и стили. Бывают **бесплатные** (можно менять любой код) и **платные** (есть техподдержка, дизайн более уникальный). Шаблоны, как и сайты, строятся из блоков: хедер, навигация, контент, футер.',
+    'Скелет страницы: {{header}}, {{main}}, {{footer}} внутри {{body}}. **Комментарии в HTML**: {{<!-- текст -->}}. Они помогают ориентироваться в коде, особенно если шаблон потом копируют для новых страниц.',
+    '**Логотип** должен отражать тему сайта и быть простым, без мелких деталей. Его рисуют в графическом редакторе или онлайн-сервисе и вставляют тегом {{img}}.'
+  ],
+  examples: [
+    { cap: 'Скелет блога: header, main, footer',
+      html: `<!-- HEADER -->
+<header>
+  Шапка
+</header>
+<!-- MAIN -->
+<main>
+  Основная часть
+</main>
+<!-- FOOTER -->
+<footer>
+  Подвал
+</footer>`,
+      css: `header, footer {                  /* одно правило для двух тегов */
+  background-color: #9debf5;      /* голубой фон */
+  padding: 10px;                  /* отступ внутри */
+}
+main {
+  padding: 10px;
+  background-color: silver;       /* серебристый фон основной части */
+}`,
+      note: 'Запятая между {{header, footer}} значит «и то, и другое». Так одно правило красит оба блока.' },
+    { cap: 'Хедер с логотипом',
+      html: `<header>
+  <img src="img/logo.png" width="200" draggable="false" alt="Logo">   <!-- логотип слева -->
+</header>`,
+      css: `header {
+  background-color: #9debf5;   /* заливка голубым */
+  padding: 10px;               /* отступ внутри */
+}`,
+      note: 'Ширина логотипа 200 пикселей, высота подстроится сама, потому что задана только {{width}}.' },
+    { cap: 'Футер с колонками',
+      html: `<footer>
+  <div class="footer-columns">   <!-- общая коробка для колонок -->
+    <div class="footer-column">   <!-- первая колонка -->
+      <h3>О нас</h3>
+      <p>Пока дети строят свои миры из кубиков, мы играем свою роль.</p>
+    </div>
+    <div class="footer-column">   <!-- вторая колонка -->
+      <h3>Свяжитесь с нами</h3>
+      <p>Напишите по электронной почте.<br>
+         <strong>Email: <a href="#">contact@mail.com</a></strong></p>
+    </div>
+  </div>
+  <p class="copyright"><small>Copyright &copy; 2026</small></p>   <!-- &copy; даёт значок © -->
+</footer>`,
+      css: `footer {
+  background-color: #9debf5;
+  padding: 10px;
+}
+.footer-columns { display: flex; }   /* колонки в один ряд */
+.footer-column {
+  flex: 50%;                         /* каждая колонка занимает половину */
+  margin: 20px;                      /* зазор вокруг колонки */
+}
+.copyright { text-align: center; }   /* копирайт по центру */`,
+      warn: 'В уроке копирайт был в теге {{center}}. Он устарел в HTML5, поэтому здесь выравнивание сделано через CSS: {{text-align: center}}.',
+      note: 'Колонок две, потому что внутри {{footer-columns}} два блока {{footer-column}}. Хочешь три колонки, добавь третий блок и поставь {{flex: 33%}}.' },
+    { cap: 'Пост в блоге',
+      html: `<main>
+  <div class="post">   <!-- один пост -->
+    <img src="img/sonic.png" height="130" alt="Card image cap">   <!-- картинка слева -->
+    <div>   <!-- коробка для текста -->
+      <h3>Соник Супер-ёжик</h3>
+      <p>Откройте для себя один из самых запоминающихся уровней видеоигр.</p>
+      <a href="#">Подробнее</a>
+    </div>
+  </div>
+  <div class="post">   <!-- второй пост: копия первого -->
+    <img src="img/sonic.png" height="130" alt="Card image cap">
+    <div>
+      <h3>Второй пост</h3>
+      <p>Чтобы добавить пост, копируешь блок post целиком и меняешь текст.</p>
+      <a href="#">Подробнее</a>
+    </div>
+  </div>
+</main>`,
+      css: `main {
+  padding: 10px;
+  background-color: silver;   /* серебристый фон страницы */
+}
+.post {
+  background-color: white;    /* белая карточка поста */
+  padding: 20px;              /* отступ внутри */
+  border-radius: 10px;        /* скруглённые углы */
+  margin-bottom: 20px;        /* зазор до следующего поста */
+  display: flex;              /* картинка и текст в один ряд */
+}
+.post img { margin: 20px; }   /* поля вокруг картинки в посте */`,
+      note: '{{display: flex}} у {{.post}} ставит картинку слева, а блок с текстом справа. {{.post img}} красит только картинки внутри постов.' }
+  ]
+},
+/* ===================== УРОК 6 ===================== */
+{
+  id: 'l6', title: '6 Посты и страницы',
+  theory: [
+    '**Иконки** можно скачать (например, в Google Material Icons в формате svg) или нарисовать самому. **Favicon** это значок сайта на вкладке браузера, в закладках и в поиске. Форматы: .ico, .png, .gif, .jpeg. Конвертировать картинку в .ico можно на favicon.io. Подключают favicon в {{head}} тегами {{link}}.',
+    'На компьютере сайт это файлы в одной папке: {{index.html}} (главная) и {{style.css}}. Страницу поста делают копией главной: остаются шапка, сайдбар и футер, меняется только содержимое {{main}}.',
+    'Ссылка на другую страницу сайта: {{<a href="post.html">}}, где {{post.html}} это имя файла.'
+  ],
+  examples: [
+    { cap: 'Favicon и заголовок вкладки',
+      html: `${DT}
+<html>
+<head>
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">   <!-- значок для iPhone на домашнем экране -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">   <!-- значок на вкладке 32x32 -->
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">   <!-- значок на вкладке 16x16 -->
+  <link rel="manifest" href="site.webmanifest">   <!-- описание сайта для телефонов -->
+  <title>Lego Kids</title>   <!-- название вкладки -->
+</head>`,
+      nopreview: true,
+      note: 'Этот код выдаёт сервис favicon.io вместе с готовыми файлами. Файлы кладут в папку с сайтом рядом с {{index.html}}.' },
+    { cap: 'Страница поста и ссылка на неё',
+      html: `<!-- на главной странице (index.html) -->
+<a href="post.html">Read more</a>   <!-- ссылка ведёт на файл post.html -->
+
+<!-- на странице поста (post.html) -->
+<h3>Соник Супер-ёжик</h3>
+<h5 class="post-info">Дата 20.02.2026, Автор: Admin</h5>   <!-- дата и автор -->
+<p>Первый абзац поста.</p>
+<p>Второй абзац поста.</p>`,
+      css: `.post-info {
+  color: grey;     /* дата и автор серым */
+}`,
+      note: 'Копируешь {{index.html}}, называешь копию {{post.html}} и меняешь только содержимое {{main}}. Так для каждого поста получается своя страница.' },
+    { cap: 'Блок комментариев',
+      html: `<h3>Комментарии (2):</h3>
+<div class="comment">   <!-- основной комментарий -->
+  <h4 class="author">Михаил</h4>
+  <h5 class="date">19:30 20.02.2026</h5>
+  Собирая набор, я вернулся в детство!
+</div>
+<div class="comment" id="subcomment">   <!-- ответ: у него есть ещё и id -->
+  <h4 class="author">Иван</h4>
+  <h5 class="date">19:35 20.02.2026</h5>
+  Согласен, отличный набор!
+</div>`,
+      css: `.comment {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 10px;          /* зазор сверху между комментариями */
+}
+.author {
+  margin-top: 0px;
+  margin-bottom: 10px;       /* зазор под именем */
+}
+.date {
+  color: silver;             /* дата серебристым */
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+#subcomment {
+  margin-left: 40px;         /* ответ сдвинут вправо */
+}`,
+      demo: { html: `<div style="background: silver; padding: 10px;">
+<h3 style="margin: 0 0 6px;">Комментарии (2):</h3>
+<div class="comment">
+  <h4 class="author">Михаил</h4>
+  <h5 class="date">19:30 20.02.2026</h5>
+  Собирая набор, я вернулся в детство!
+</div>
+<div class="comment" id="subcomment">
+  <h4 class="author">Иван</h4>
+  <h5 class="date">19:35 20.02.2026</h5>
+  Согласен, отличный набор!
+</div>
+</div>`, css: `.comment { background-color: white; padding: 20px; border-radius: 10px; margin-top: 10px; }
+.author { margin-top: 0px; margin-bottom: 10px; }
+.date { color: silver; margin-top: 0px; margin-bottom: 10px; }
+#subcomment { margin-left: 40px; }` },
+      warn: 'В уроке в HTML стоит {{id="subcomment"}}, а в CSS написано {{#sub-comment}}. Имена должны совпадать буква в букву, иначе стиль не сработает. Здесь исправлено.',
+      note: 'Ответ получает два имени: класс {{comment}} (общий вид) и id {{subcomment}} (отступ слева). Комментариев можно добавлять сколько угодно.' }
+  ]
+},
+/* ===================== УРОК 7 ===================== */
+{
+  id: 'l7', title: '7 Меню',
+  theory: [
+    'Виды меню: **горизонтальное** (для небольшого числа вкладок, часто закреплено сверху и не исчезает при прокрутке), **вертикальное** (не загромождает страницу, чаще слева), **выпадающее** (для разделов с подразделами, например в интернет-магазинах), **комбинированное** (один вид дополняет другой, например гамбургер и горизонтальное).',
+    'Важные ссылки (главная, вход, регистрация) лучше выносить из гамбургера на верхнюю панель. Иконки в меню допустимы, если они передают смысл, и нужны у каждого пункта. Мягкие тени ({{box-shadow}}) дают эффект глубины. В футере удобно дублировать меню в развёрнутом виде: пользователь добирается туда, если не нашёл нужное.'
+  ],
+  examples: [
+    { cap: 'Выпадающее меню из урока',
+      html: `<nav id="menu1">
+  <ul>
+    <li><a href="#m1">MENU</a></li>
+    <li><a href="#m2">MENU</a></li>
+    <li><a href="#m3">MENU</a>
+      <ul>   <!-- подменю: список внутри пункта -->
+        <li><a href="#m3_1">Menu</a></li>
+        <li><a href="#m3_2">Menu</a></li>
+        <li><a href="#m3_3">Menu</a></li>
+      </ul>
+    </li>
+    <li><a href="#m4">MENU</a></li>
+  </ul>
+</nav>`,
+      css: `#menu1 {
+  position: relative;       /* точка отсчёта для подменю */
+  display: block;
+  width: 100%;
+  height: auto;
+  z-index: 10;              /* меню лежит выше остальных блоков */
+  background: #38b6ff;      /* цвет меню (в уроке его даёт header) */
+}
+#menu1 ul {
+  position: relative;
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: auto;
+  list-style: none;         /* без маркеров */
+}
+#menu1 > ul::after {        /* ::after добавляет содержимое после списка */
+  display: block;
+  width: 100%;
+  height: 0px;
+  clear: both;              /* сбрасывает float: меню получает высоту */
+  content: " ";
+}
+#menu1 ul li {
+  position: relative;       /* точка отсчёта для своего подменю */
+  display: block;
+  float: left;              /* пункты в ряд */
+  width: auto;
+  height: auto;
+}
+#menu1 ul li a {
+  display: block;
+  padding: 9px 25px 0px 25px;
+  font-size: 14px;
+  line-height: 1.3em;       /* высота строки */
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;    /* ПРОПИСНЫЕ буквы */
+  height: 36px;
+  box-sizing: border-box;
+  color: white;
+}
+#menu1 ul li ul {           /* подменю */
+  position: absolute;       /* поверх страницы, не двигает остальное */
+  top: 36px;                /* сразу под пунктом (36px это высота пункта) */
+  left: 0px;
+  display: none;            /* спрятано */
+  width: 200px;
+  background: #38b6ff;
+}
+#menu1 ul li:hover ul {     /* навели на пункт */
+  display: block;           /* показываем подменю */
+}
+#menu1 ul li ul li {        /* пункты подменю */
+  float: none;              /* друг под другом */
+  width: 100%;
+}
+#menu1 ul li ul li a {
+  display: block;
+  text-transform: none;     /* обычные буквы */
+  height: auto;
+  padding: 7px 25px;
+  width: 100%;
+  box-sizing: border-box;
+  border-top: 1px solid #ffffff;   /* белая линия между пунктами */
+  color: white;
+}
+#menu1 ul li ul li:first-child a {   /* только у первого пункта подменю */
+  border-top: 0px;                   /* линию убираем */
+}`,
+      minH: 190,
+      hint: 'Наведи на третий пункт или нажми на него.',
+      note: 'Идея одна: подменю спрятано ({{display: none}}) и показывается, когда наводишь на пункт ({{li:hover ul}}). Селектор {{#menu1 ul li a}} читается «ссылки в пунктах списков внутри меню menu1».' },
+    { cap: 'Вертикальное меню',
+      html: `<nav class="vmenu">
+  <ul>
+    <li><a href="#">Главная</a></li>
+    <li><a href="#">Проекты</a></li>
+    <li><a href="#">Контакты</a></li>
+  </ul>
+</nav>`,
+      css: `.vmenu ul {
+  list-style: none;       /* без маркеров */
+  margin: 0;
+  padding: 0;
+  width: 160px;           /* ширина колонки меню */
+}
+.vmenu a {
+  display: block;         /* каждая ссылка с новой строки на всю ширину */
+  padding: 10px 16px;
+  background: #1f2d3d;
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid #3b82c4;   /* линия под пунктом */
+}
+.vmenu a:hover { background: #3b82c4; }`,
+      hint: 'Наведи на пункт или нажми на него.',
+      tag: 'extra',
+      note: 'От горизонтального меню оно отличается тем, что у {{li}} нет {{float: left}}: пункты сами идут друг под другом.' },
+    { cap: 'Фиксированное меню, которое не исчезает при прокрутке',
+      html: `<nav class="top">Меню</nav>`,
+      css: `.top {
+  position: sticky;    /* меню прилипает при прокрутке */
+  top: 0;              /* на расстоянии 0 от верха окна */
+  z-index: 10;         /* лежит выше остального */
+  background: #1f2d3d;
+  color: #fff;
+  padding: 12px;
+}`,
+      nopreview: true,
+      tag: 'extra',
+      note: 'Так делают горизонтальное меню, которое видно всегда. Вариант {{position: fixed; top: 0; width: 100%;}} работает похоже, но вырывает блок из потока, и контент под ним придётся сдвигать отступом.' },
+    { cap: 'Бургер-меню без JavaScript',
+      html: `<details class="burger">   <!-- раскрывающийся блок -->
+  <summary>☰</summary>   <!-- значок бургера, на него нажимают -->
+  <a href="#">Главная</a>
+  <a href="#">Обо мне</a>
+</details>`,
+      css: `.burger summary {
+  list-style: none;       /* убираем стрелочку (Chrome, Firefox) */
+  background: #1f2d3d;
+  color: #fff;
+  font-size: 28px;
+  padding: 10px 16px;
+  cursor: pointer;        /* курсор-рука */
+}
+.burger summary::-webkit-details-marker {   /* стрелочка в Safari */
+  display: none;
+}
+.burger a {
+  display: block;         /* ссылки друг под другом */
+  background: #3b82c4;
+  color: #fff;
+  padding: 14px 16px;
+  text-decoration: none;
+}`,
+      hint: 'Нажми на ☰, потом ещё раз.',
+      tag: 'extra',
+      note: 'Тег {{details}} сам умеет раскрываться по нажатию. Чтобы меню было открыто сразу, добавь атрибут {{open}}.' }
+  ]
+},
+/* ===================== УРОК 8 ===================== */
+{
+  id: 'l8', title: '8 Карусель',
+  theory: [
+    '**Карусель** (слайдер) показывает несколько слайдов по очереди. Делается на CSS и JavaScript. Обычно стоит под хедером и меню, содержит картинку, текст и иногда кнопку. Есть стрелки и индикаторы, автопрокрутка (не слишком быстрая и не слишком медленная), и карусель должна быть адаптивной.',
+    'Плюсы: на одном месте много информации, это первое, что видит посетитель. Минусы: пользователи часто её игнорируют, а по картинке сложно составить цельное представление. Слайды делают в общем стиле сайта, самое важное ставят первым.',
+    'В уроке карусель делается плагином **Slick**, который работает на библиотеке **jQuery** (она упрощает JavaScript). Нужно: папка {{slick}} в проекте, пустой файл {{js/script.js}}, подключение стилей в {{head}} и скриптов в конце {{body}}.'
+  ],
+  examples: [
+    { cap: 'Подключение Slick и jQuery',
+      html: `<!-- В <head>: стили Slick -->
+<link rel="stylesheet" type="text/css" href="slick/slick.css">
+<link rel="stylesheet" type="text/css" href="slick/slick-theme.css">
+
+<!-- В конце <body>, после </footer>: скрипты. Порядок важен -->
+<\script src="https://code.jquery.com/jquery-1.11.0.min.js"><\/script>   <!-- библиотека jQuery -->
+<\script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"><\/script>   <!-- совместимость со старым кодом -->
+<\script src="slick/slick.min.js"><\/script>   <!-- плагин Slick -->
+<\script src="js/script.js"><\/script>   <!-- наш файл со скриптом -->`,
+      nopreview: true,
+      note: 'Скрипты ставят в самом конце {{body}}, чтобы страница успела загрузиться. Сначала jQuery, потом плагин, потом свой файл: каждый следующий использует предыдущий.' },
+    { cap: 'Разметка и стили карусели',
+      html: `<div class="carousele">   <!-- вся карусель -->
+  <div class="carousele-element">   <!-- один слайд -->
+    <img src="img/banner1.png" alt="Баннер 1">
+  </div>
+  <div class="carousele-element">   <!-- второй слайд -->
+    <img src="img/banner2.png" alt="Баннер 2">
+  </div>
+</div>`,
+      css: `.carousele {
+  margin: 10px;           /* поля вокруг карусели */
+}
+.carousele div img {
+  width: 100%;            /* картинка по ширине слайда */
+}`,
+      js: `$(document).ready(function () {   // когда страница загрузилась
+  $('.carousele').slick({         // превращаем блок .carousele в карусель
+    arrows: false,                // выключить стрелки
+    autoplay: true                // менять слайды сами
+  });
+});`,
+      hint: 'Без плагина слайды просто идут друг под другом. Плагин Slick превращает их в карусель.',
+      note: 'Слайдов можно сделать сколько угодно: копируй {{carousele-element}}. В скобках {{slick({})}} пишут настройки, полный список на kenwheeler.github.io/slick.' },
+    { cap: 'Простая карусель без плагина',
+      html: `<div class="slider">   <!-- лента слайдов -->
+  <div class="slide s1">Слайд 1</div>
+  <div class="slide s2">Слайд 2</div>
+  <div class="slide s3">Слайд 3</div>
+</div>`,
+      css: `.slider {
+  display: flex;                     /* слайды в один ряд */
+  overflow-x: auto;                  /* ряд листается по горизонтали */
+  scroll-snap-type: x mandatory;     /* при прокрутке слайд «встаёт» на место */
+}
+.slide {
+  flex: 0 0 100%;                    /* каждый слайд на всю ширину и не сжимается */
+  scroll-snap-align: start;          /* слайд встаёт по левому краю */
+  height: 120px;
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+  line-height: 120px;                /* высота строки равна высоте блока: текст по центру */
+}
+.s1 { background: #3b82c4; }
+.s2 { background: #0b7a75; }
+.s3 { background: #e8590c; }`,
+      hint: 'Проведи по слайдам пальцем или мышью влево и вправо.',
+      tag: 'extra',
+      note: 'Это упрощённая карусель только на CSS: листается вручную, без стрелок и автопрокрутки. Для автопрокрутки и стрелок нужен JavaScript или плагин вроде Slick.' }
+  ]
+},
+/* ===================== УРОК 9 ===================== */
+{
+  id: 'l9', title: '9 Шрифты и видео',
+  theory: [
+    'Шрифты подбирают в сервисе **Google Fonts** (fonts.google.com): фильтры по языку и типу (с засечками или без), проверка текста. Выбранный шрифт подключают двумя способами: тегом {{link}} в {{head}} или строкой {{@import}} в начале CSS. Дальше шрифт применяют через {{font-family}}.',
+    'Толщину задаёт {{font-weight}}: {{300}} тонкий, {{400}} обычный, {{600}} полужирный, {{700}} жирный. Второе значение в {{font-family}} (например, {{sans-serif}}) запасное: оно сработает, если основной шрифт не загрузился. Названия из нескольких слов пишут в обычных кавычках.',
+    'Видео с YouTube вставляют так: Поделиться, Встроить, Копировать код, вставить в страницу. Это тег {{iframe}}: окно со страницей другого сайта.'
+  ],
+  examples: [
+    { cap: 'Подключение шрифтов двумя способами',
+      html: `<!-- Способ 1. Тег link в <head> -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&family=Roboto:wght@300&display=swap" rel="stylesheet">`,
+      css: `/* Способ 2. @import первой строкой в CSS */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&family=Roboto:wght@300&display=swap');`,
+      nopreview: true,
+      note: 'Адрес сервис Google Fonts выдаёт сам: выбираешь шрифт и толщину, нажимаешь «View selected families», копируешь код. В адресе {{wght@600}} это толщина, {{display=swap}} показывает запасной шрифт, пока загружается основной.' },
+    { cap: 'Применение шрифтов к элементам',
+      html: `<h1>Заголовок</h1>
+<h2>Подзаголовок</h2>
+<p>Абзац текста шрифтом Roboto, тонкий.</p>
+<a href="#">Ссылка с большим расстоянием между буквами</a>`,
+      css: `h1, h2, h3, h4, h5 {
+  font-family: 'Open Sans', sans-serif;   /* шрифт Open Sans, запасной без засечек */
+  font-weight: 600;                       /* полужирный */
+}
+p {
+  font-family: 'Roboto', sans-serif;      /* для абзацев Roboto */
+  font-weight: 300;                       /* тонкий */
+}
+a {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 2px;                    /* расстояние между буквами */
+}`,
+      note: 'В коде нужны обычные прямые кавычки (\' или "), а не изогнутые «‘ ’», которые часто попадают при копировании из текстов.' },
+    { cap: 'Видео с YouTube',
+      html: `<iframe
+  width="560" height="315"   <!-- размеры окна с видео -->
+  src="https://www.youtube.com/embed/КОД_ВИДЕО"   <!-- адрес видео, его даёт YouTube -->
+  title="Название видео"   <!-- название для читалок и подсказок -->
+  allowfullscreen>   <!-- разрешить полный экран -->
+</iframe>`,
+      demo: { html: `<div style="background:#1f2d3d;color:#fff;text-align:center;padding:60px 10px;border-radius:6px;">Здесь будет видео с YouTube</div>` },
+      hint: 'Видео в примере заменено заглушкой: окно другого сайта сюда встроить нельзя.',
+      note: 'Код лучше копировать у самого YouTube: он вставит правильный адрес. Если не ставить отметку «Начало» при копировании, видео пойдёт с первой секунды.' },
+    { cap: 'Своё видео файлом: тег video',
+      html: `<video controls width="260" poster="img/preview.png">   <!-- controls: кнопки управления, poster: картинка до запуска -->
+  <source src="video.mp4" type="video/mp4">   <!-- файл видео и его формат -->
+  Ваш браузер не поддерживает видео.   <!-- показывается, если video не работает -->
+</video>`,
+      demo: { html: `<video controls width="260" poster="${IMG}"></video>` },
+      tag: 'web',
+      url: 'https://developer.mozilla.org/en/HTML/Element/video',
+      urlLabel: 'MDN: video',
+      note: 'Браузер пробует {{source}} по порядку и берёт первый подходящий. Дополнительные атрибуты: {{autoplay}} (запуск сразу), {{loop}} (по кругу), {{muted}} (без звука). Автозапуск со звуком браузеры обычно блокируют, поэтому для {{autoplay}} добавляют {{muted}}.' }
+  ]
+},
+/* ===================== УРОК 10 ===================== */
+{
+  id: 'l10', title: '10 Хостинг',
+  theory: [
+    '**Хостинг** хранит файлы сайта и даёт к ним доступ круглосуточно. Для проб и показа друзьям хватает бесплатного. Если проект для бизнеса или работы, берут платный. В уроке примеры: СпринтХост (250 Мб бесплатно) и Beget (место без ограничения по времени и бесплатный домен).',
+    '**Домен** это уникальное имя сайта из букв латинского алфавита и цифр, разделённых точкой. Состоит из имени, **доменной зоны** (.com, .net, .org, территориальные us, eu, uk) и необязательного **поддомена** (например, images). В lego.com имя это lego, зона .com.',
+    'Страницы блога собирают в одном проекте: главная, страницы постов, страница обо мне, контакты, страница со ссылками на друзей и партнёров, папка со стилями.'
+  ],
+  examples: [
+    { cap: 'Структура проекта перед загрузкой',
+      files: [{ label: 'Файлы сайта', text: `мой-блог/
+├─ index.html        главная страница блога
+├─ post-01.html      страницы с постами
+├─ post-02.html
+├─ post-03.html
+├─ about.html        обо мне и моих увлечениях
+├─ contact.html      контакты
+├─ partners.html     ссылки на сайты друзей и партнёров
+└─ css/
+    └─ style.css     стили` }],
+      nopreview: true,
+      note: 'Ссылки между страницами пишут по имени файла: {{<a href="about.html">}}. Так они работают и на компьютере, и на хостинге.' },
+    { cap: 'Как разместить сайт на бесплатном хостинге',
+      files: [{ label: 'Шаги (на примере СпринтХост)', text: `1. Зарегистрироваться (Google, VK или e-mail) и нажать «Начать работу».
+2. На подсказку ответить «Разобраться во всём самостоятельно».
+3. В личном кабинете открыть «Файловый менеджер».
+4. Зайти в папку domains, затем в папку своего домена, затем в public_html.
+5. Удалить папку index_php (значок корзины).
+6. Нажать «Загрузить файл» и загрузить всё содержимое папки с сайтом.
+7. Скопировать свой бесплатный домен, вставить в браузер и проверить сайт.` }],
+      nopreview: true,
+      note: 'Загружай содержимое папки (файлы и папку css), а не саму папку-обёртку: главная страница {{index.html}} должна лежать прямо в {{public_html}}.' },
+    { cap: 'Другие бесплатные варианты',
+      files: [{ label: 'Часто используют', text: `GitHub Pages     бесплатный хостинг статических сайтов из репозитория GitHub
+Netlify          загрузка папки перетаскиванием, бесплатный тариф
+Cloudflare Pages бесплатный хостинг статических сайтов` }],
+      nopreview: true,
+      tag: 'extra',
+      note: 'Условия бесплатных тарифов меняются, поэтому проверяй их на сайтах сервисов перед загрузкой.' }
+  ]
+},
+/* ===================== ДОПОЛНЕНИЕ ===================== */
+{
+  id: 'more', title: 'Ещё теги',
+  theory: [
+    'Здесь теги, которых нет в уроках, но они часто встречаются. Что стоит помнить: HTML задаёт смысл, поэтому выбирай тег по смыслу, а вид настраивай в CSS.'
+  ],
+  examples: [
+    { cap: 'Смысловые теги: article, section, aside, figure, time',
+      html: `<article>   <!-- самостоятельный материал: пост, новость, карточка -->
+  <h2>Название поста</h2>
+  <p>Опубликовано: <time datetime="2026-11-18">18 ноября 2026</time></p>   <!-- time: дата, понятная и людям, и машинам -->
+  <section>   <!-- смысловая часть внутри материала -->
+    <h3>Вступление</h3>
+    <p>Первый раздел поста.</p>
+  </section>
+  <figure>   <!-- картинка с подписью -->
+    <img src="img/photo.png" alt="Описание" width="120">
+    <figcaption>Подпись к картинке</figcaption>   <!-- подпись -->
+  </figure>
+</article>
+<aside>Связанная заметка в стороне от основного текста.</aside>   <!-- aside: дополнительный блок, например сайдбар -->`,
+      css: `article { border: 1px solid #ccc; padding: 10px; }
+section h3 { color: #3b82c4; }
+figcaption { font-size: 13px; color: #6b7a89; }
+aside { background: #eef4fb; padding: 10px; margin-top: 10px; }`,
+      tag: 'web',
+      url: 'https://www.w3schools.com/html/html5_semantic_elements.asp',
+      urlLabel: 'W3Schools: смысловые элементы',
+      note: '{{article}} это самостоятельный блок, который имеет смысл сам по себе. {{section}} группирует связанное содержимое под заголовком. {{aside}} это дополнительное в стороне от основного. {{figure}} с {{figcaption}} это картинка или схема с подписью.' },
+    { cap: 'Таблица',
+      html: `<table>   <!-- вся таблица -->
+  <caption>Участники клуба</caption>   <!-- название таблицы -->
+  <thead>   <!-- шапка -->
+    <tr>   <!-- строка -->
+      <th scope="col">Имя</th>   <!-- ячейка-заголовок столбца -->
+      <th scope="col">Возраст</th>
+    </tr>
+  </thead>
+  <tbody>   <!-- основная часть -->
+    <tr>
+      <th scope="row">Аня</th>   <!-- заголовок строки -->
+      <td>22</td>   <!-- обычная ячейка -->
+    </tr>
+    <tr>
+      <th scope="row">Игорь</th>
+      <td>29</td>
+    </tr>
+    <tr>
+      <td colspan="2">Итого: 2 участника</td>   <!-- colspan: ячейка занимает 2 столбца -->
+    </tr>
+  </tbody>
+</table>`,
+      css: `table {
+  border-collapse: collapse;       /* соседние границы сливаются в одну */
+}
+th, td {
+  border: 1px solid #a0a0a0;       /* рамка у каждой ячейки */
+  padding: 6px 12px;               /* отступ внутри ячейки */
+}`,
+      tag: 'web',
+      url: 'https://developer.mozilla.org/en/HTML/Element/table',
+      urlLabel: 'MDN: table',
+      note: '{{tr}} это строка, {{th}} ячейка-заголовок (жирная, по центру), {{td}} обычная ячейка. {{colspan}} растягивает ячейку по столбцам, {{rowspan}} по строкам. Без {{border-collapse}} границы соседних ячеек выглядят двойными.' },
+    { cap: 'Форма: label, input, button',
+      html: `<form>   <!-- форма -->
+  <label for="username">Ваше имя</label>   <!-- подпись; for равно id поля -->
+  <input type="text" id="username" name="username" placeholder="Например, Аня" required>   <!-- поле для текста -->
+  <br><br>
+  <label for="mail">Почта</label>
+  <input type="email" id="mail" name="mail">   <!-- поле для почты -->
+  <br><br>
+  <input type="checkbox" id="agree">   <!-- флажок -->
+  <label for="agree">Согласен с правилами</label>
+  <br><br>
+  <button type="submit">Отправить</button>   <!-- кнопка отправки -->
+</form>`,
+      css: `input { padding: 6px; margin: 2px 0 6px; }
+button { padding: 8px 16px; }`,
+      hint: 'Подпись и поле связаны: нажми на подпись «Согласен с правилами», флажок отметится.',
+      tag: 'web',
+      url: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/for',
+      urlLabel: 'MDN: атрибут for',
+      note: 'Значение {{for}} у подписи должно совпадать с {{id}} у поля, тогда нажатие на подпись выбирает поле. Виды полей задаёт {{type}}: {{text}}, {{email}}, {{password}}, {{number}}, {{checkbox}}, {{radio}}, {{date}}, {{submit}}. {{placeholder}} это подсказка внутри пустого поля, {{required}} делает поле обязательным.' },
+    { cap: 'Цитаты, код и сокращения',
+      html: `<blockquote>   <!-- длинная цитата, обычно с отступом -->
+  Учиться никогда не поздно.
+</blockquote>
+<p>Он сказал: <q>всё получится</q>.</p>   <!-- q: короткая цитата в кавычках -->
+<p>Тег <code>img</code> вставляет картинку.</p>   <!-- code: фрагмент кода -->
+<pre>
+строка 1
+    строка 2 с отступом
+</pre>   <!-- pre: сохраняет пробелы и переносы как написано -->
+<p><abbr title="HyperText Markup Language">HTML</abbr> и <small>мелкий текст</small></p>   <!-- abbr: сокращение, при наведении видна расшифровка -->`,
+      tag: 'extra',
+      hint: 'Наведи на слово HTML: всплывёт расшифровка.',
+      note: '{{blockquote}} для длинных цитат, {{q}} для коротких внутри строки. {{code}} это строчный код, {{pre}} сохраняет форматирование (подходит для блоков кода).' },
+    { cap: 'Звук: тег audio',
+      html: `<audio controls src="music.mp3">   <!-- controls: кнопки управления -->
+  Ваш браузер не поддерживает аудио.   <!-- запасной текст -->
+</audio>`,
+      tag: 'extra',
+      note: 'Работает как {{video}}: адрес файла в {{src}}, кнопки управления включает {{controls}}.' },
+    { cap: 'Устаревшее: что чем заменить',
+      files: [{ label: 'Старое и новое', text: `<center>             →  text-align: center;
+<font color="red">   →  color: red;
+align="left" у img   →  float: left;
+vspace и hspace      →  margin
+bgcolor="..."        →  background-color: ...;` }],
+      nopreview: true,
+      tag: 'extra',
+      note: 'Эти теги и атрибуты часто попадаются в старых шаблонах и уроках. Они ещё работают, но новый код лучше писать на CSS.' }
+  ]
+}
+];
+
+/* ===== Словари для блока «Что значат слова из кода» ===== */
+var TAGS = {
+  html: 'главный тег страницы, внутри лежит всё остальное',
+  head: 'служебная часть страницы, на экране не видна',
+  body: 'видимая часть страницы',
+  meta: 'служебные данные: кодировка, настройки экрана, описание',
+  title: 'название на вкладке браузера',
+  link: 'подключает внешний файл (стили, шрифты, значки)',
+  style: 'место для CSS прямо в странице',
+  script: 'подключает или содержит JavaScript',
+  div: 'блок-коробка без смысла, для группировки и оформления',
+  span: 'строчная коробка для куска текста внутри строки',
+  p: 'абзац текста',
+  h1: 'заголовок первого уровня, самый главный', h2: 'заголовок второго уровня', h3: 'заголовок третьего уровня',
+  h4: 'заголовок четвёртого уровня', h5: 'заголовок пятого уровня', h6: 'заголовок шестого уровня, самый мелкий',
+  br: 'перенос строки (парного тега нет)',
+  hr: 'горизонтальная линия (парного тега нет)',
+  a: 'ссылка, адрес указывается в атрибуте href',
+  b: 'полужирный шрифт (просто вид)',
+  strong: 'полужирный шрифт, важное по смыслу',
+  i: 'курсив (просто вид)',
+  em: 'курсив, с акцентом по смыслу',
+  u: 'подчёркнутый текст',
+  s: 'зачёркнутый текст',
+  mark: 'выделение маркером',
+  small: 'мелкий текст',
+  sub: 'нижний индекс, как в H₂O',
+  sup: 'верхний индекс, как в x²',
+  ul: 'список с точками',
+  ol: 'нумерованный список',
+  li: 'один пункт списка (лежит внутри ul или ol)',
+  img: 'картинка (парного тега нет)',
+  nav: 'блок навигации (меню), то же что div, но с понятным смыслом',
+  header: 'шапка страницы или раздела',
+  main: 'основное содержимое страницы',
+  aside: 'дополнительный блок в стороне от основного, например сайдбар',
+  footer: 'подвал страницы или раздела',
+  section: 'смысловая часть страницы под своим заголовком',
+  article: 'самостоятельный материал: пост, новость, карточка',
+  figure: 'картинка, схема или код с подписью',
+  figcaption: 'подпись к figure',
+  time: 'дата или время, понятные и людям, и машинам',
+  button: 'кнопка; сама ссылку не открывает, поэтому её кладут внутрь a',
+  details: 'раскрывающийся блок: прячет и показывает содержимое по нажатию',
+  summary: 'заголовок блока details, на него нажимают',
+  table: 'таблица',
+  caption: 'название таблицы',
+  thead: 'шапка таблицы',
+  tbody: 'основная часть таблицы',
+  tr: 'строка таблицы',
+  th: 'ячейка-заголовок',
+  td: 'обычная ячейка',
+  form: 'форма для ввода данных',
+  label: 'подпись к полю формы',
+  input: 'поле ввода; вид задаёт атрибут type',
+  blockquote: 'длинная цитата',
+  q: 'короткая цитата внутри строки, браузер ставит кавычки',
+  code: 'фрагмент программного кода',
+  pre: 'текст с сохранением пробелов и переносов',
+  abbr: 'сокращение; расшифровка в атрибуте title',
+  iframe: 'окно со страницей другого сайта (например, видео YouTube)',
+  video: 'видео',
+  audio: 'звук',
+  source: 'файл для video или audio и его формат'
+};
+var ATTRS = {
+  class: 'имя для CSS, можно повторять у многих блоков',
+  id: 'имя для CSS, одно на странице; у поля формы связывается с label',
+  href: 'адрес, куда ведёт ссылка или какой файл подключить',
+  src: 'адрес файла (картинки, видео, скрипта)',
+  alt: 'текст вместо картинки, если она не загрузилась',
+  width: 'ширина',
+  height: 'высота',
+  align: 'положение (устарел, вместо него CSS float)',
+  vspace: 'пустое место сверху и снизу (устарел, вместо него margin)',
+  hspace: 'пустое место по бокам (устарел, вместо него margin)',
+  draggable: 'можно ли перетаскивать мышкой (true или false)',
+  type: 'вид: у link формат файла, у списка вид маркеров, у input вид поля, у source формат видео',
+  start: 'с какого номера начать список',
+  open: 'раскрыть блок сразу',
+  style: 'CSS прямо в теге',
+  lang: 'язык страницы',
+  charset: 'кодировка символов',
+  name: 'имя: у meta название настройки, у input имя поля',
+  content: 'значение настройки у meta',
+  rel: 'тип подключения (stylesheet значит файл стилей, icon значок)',
+  sizes: 'размер значка в пикселях',
+  crossorigin: 'разрешение загружать файл с другого сайта',
+  title: 'название или всплывающая подсказка',
+  allowfullscreen: 'разрешить полноэкранный режим',
+  controls: 'показать кнопки управления',
+  poster: 'картинка, пока видео не запущено',
+  for: 'у label: id поля, к которому относится подпись',
+  placeholder: 'подсказка внутри пустого поля',
+  required: 'поле обязательно для заполнения',
+  datetime: 'дата в машинном виде',
+  colspan: 'сколько столбцов занимает ячейка',
+  rowspan: 'сколько строк занимает ячейка',
+  scope: 'ячейка-заголовок для столбца (col) или строки (row)'
+};
+var PROPS = {
+  'color': 'цвет текста',
+  'background': 'фон: цвет (или картинка)',
+  'background-color': 'цвет фона',
+  'background-image': 'фоновая картинка; адрес пишут в url("...")',
+  'background-repeat': 'повторять ли картинку (no-repeat: не повторять)',
+  'background-size': 'размер фоновой картинки',
+  'background-position': 'положение фоновой картинки: по горизонтали, потом по вертикали',
+  'padding': 'отступ ВНУТРИ блока, между его краем и содержимым',
+  'padding-top': 'внутренний отступ сверху',
+  'padding-left': 'внутренний отступ слева',
+  'margin': 'отступ СНАРУЖИ блока, между ним и соседями',
+  'margin-top': 'внешний отступ сверху',
+  'margin-bottom': 'внешний отступ снизу',
+  'margin-left': 'внешний отступ слева',
+  'border': 'рамка: толщина, вид линии и цвет; none значит «без рамки»',
+  'border-top': 'рамка только сверху',
+  'border-bottom': 'рамка только снизу',
+  'border-radius': 'скругление углов; четыре числа идут по часовой от верхнего левого',
+  'border-collapse': 'collapse: соседние границы ячеек сливаются в одну',
+  'width': 'ширина блока (в px или %)',
+  'max-width': 'наибольшая ширина: дальше блок не растёт',
+  'height': 'высота блока',
+  'font': 'сокращённая запись шрифта: начертание, размер, семейство',
+  'font-family': 'шрифт; последнее значение запасное (sans-serif: без засечек)',
+  'font-size': 'размер шрифта',
+  'font-weight': 'толщина шрифта: 300 тонкий, 600 полужирный, bold жирный',
+  'font-style': 'начертание, italic значит курсив',
+  'letter-spacing': 'расстояние между буквами',
+  'line-height': 'высота строки',
+  'text-align': 'выравнивание текста: left, center, right, justify',
+  'text-decoration': 'подчёркивание: underline подчёркивает, none убирает',
+  'text-transform': 'регистр букв: uppercase делает ПРОПИСНЫМИ, none оставляет как есть',
+  'list-style': 'вид маркеров списка, none убирает их',
+  'list-style-type': 'вид маркеров или номеров: square, circle, disc, upper-roman и другие',
+  'display: block': 'display: block: блок идёт с новой строки и на всю ширину',
+  'display: flex': 'display: flex: дети блока встают в один ряд',
+  'display: grid': 'display: grid: блок делится на колонки и строки (сетка)',
+  'display: none': 'display: none: спрятать элемент совсем',
+  'display: inline-block': 'display: inline-block: в строке с текстом, но размеры задавать можно',
+  'justify-content': 'как расположить детей flex по горизонтали (center: по центру)',
+  'align-items': 'как расположить детей flex по вертикали (center: по центру)',
+  'flex-wrap': 'wrap: если дети не помещаются в строку, переносить их вниз',
+  'flex-direction': 'направление flex: row ряд, column столбец',
+  'flex': 'как ребёнок flex занимает место: 50% это половина, 0 0 100% не сжимается и занимает всю ширину',
+  'gap': 'зазор между детьми flex или grid',
+  'grid-template-columns': 'ширины колонок сетки; 1fr это одна доля свободного места',
+  'float': 'прижать блок влево или вправо, остальное обтекает его',
+  'clear': 'both: этот блок начнётся ниже плавающих (float) блоков',
+  'overflow': 'что делать с содержимым, которое не влезло (hidden: обрезать, auto: полоса прокрутки)',
+  'overflow-x': 'то же по горизонтали (auto: листать вбок)',
+  'box-sizing': 'border-box: padding и рамка входят в ширину блока',
+  'box-shadow': 'тень блока: сдвиг x, сдвиг y, размытие, размер, цвет',
+  'transition': 'плавное изменение; 0.2s значит 0,2 секунды',
+  'position: relative': 'position: relative: блок остаётся на месте и становится точкой отсчёта для вложенных',
+  'position: absolute': 'position: absolute: блок лежит поверх страницы и не двигает остальное, отсчёт от ближайшего родителя с relative',
+  'position: sticky': 'position: sticky: блок прилипает к краю окна при прокрутке',
+  'top': 'отступ от верхнего края родителя (100% это сразу под ним)',
+  'left': 'отступ от левого края родителя',
+  'z-index': 'какой блок выше другого: больше число, выше слой',
+  'content': 'содержимое, которое добавляет ::after или ::before',
+  'scroll-snap-type': 'при прокрутке элементы «встают» на место',
+  'scroll-snap-align': 'к какому краю прилипает элемент при прокрутке',
+  'cursor': 'вид курсора; pointer это рука'
+};
+var SPECIAL = {
+  hover: ':hover: состояние «навели курсор или нажали пальцем»',
+  media: '@media: правила внутри работают только при условии, например «экран не шире 600px»',
+  marker: '::-webkit-details-marker: стрелочка у блока details в Safari',
+  star: '*: звёздочка выбирает все элементы страницы',
+  child: '>: выбрать только прямого ребёнка, не вложенных глубже',
+  after: '::after: добавляет содержимое после элемента',
+  first: ':first-child: первый из соседей-детей',
+  imp: '@import: подключает другой CSS (шрифты Google); пишется первой строкой'
+};
+
+function sp(key) { return SPECIAL[key].split(': ').slice(1).join(': '); }
+
+function glossary(ex) {
+  var items = [], seen = {};
+  function add(name, text) {
+    if (seen[name]) return;
+    seen[name] = true;
+    items.push([name, text]);
+  }
+  var html = (ex.html || '').replace(/<!--[\s\S]*?-->/g, '');
+  var css = (ex.css || '').replace(/\/\*[\s\S]*?\*\//g, '');
+
+  // CSS из атрибутов style="..."
+  var styles = html.match(/style="[^"]*"/g) || [];
+  styles.forEach(function (s) { css += ' x{' + s.slice(7, -1) + '}'; });
+
+  // HTML: теги и атрибуты
+  var tags = html.match(/<[a-z][^>]*>/gi) || [];
+  tags.forEach(function (t) {
+    var m = t.match(/^<([a-z][a-z0-9]*)/i);
+    if (m && TAGS[m[1].toLowerCase()]) add('<' + m[1].toLowerCase() + '>', TAGS[m[1].toLowerCase()]);
+  });
+  tags.forEach(function (t) {
+    var re = /\s([a-z-]+)(?==|\s|>|$)/gi, a;
+    while ((a = re.exec(t)) !== null) {
+      var n = a[1].toLowerCase();
+      if (ATTRS[n]) add(n, ATTRS[n]);
+    }
+  });
+
+  // CSS: особые селекторы и at-правила
+  if (/:hover/.test(css)) add(':hover', sp('hover'));
+  if (/:first-child/.test(css)) add(':first-child', sp('first'));
+  if (/::after/.test(css)) add('::after', sp('after'));
+  if (/@media/.test(css)) add('@media', sp('media'));
+  if (/@import/.test(css)) add('@import', sp('imp'));
+  if (/::-webkit-details-marker/.test(css)) add('::-webkit-details-marker', sp('marker'));
+  if (/(^|\n)\s*\*\s*\{/.test(css)) add('*', sp('star'));
+  if (/[a-z0-9_-]\s*>\s*[a-z.#]/i.test(css.replace(/\{[^}]*\}/g, '{}'))) add('>', sp('child'));
+
+  // CSS: свойства
+  var re2 = /([a-z-]+)\s*:\s*([^;{}]+)(?=;|\})/gi, m2;
+  while ((m2 = re2.exec(css)) !== null) {
+    var prop = m2[1].toLowerCase(), val = m2[2].trim().toLowerCase();
+    var keyed = prop + ': ' + val;
+    if (PROPS[keyed]) {
+      add(keyed, PROPS[keyed].replace(keyed + ': ', ''));
+    } else if (PROPS[prop]) {
+      add(prop, PROPS[prop]);
+    }
+  }
+  return items;
+}
+
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function fmt(s) {
+  return esc(s)
+    .replace(/\{\{(.+?)\}\}/g, '<code class="i">$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
+function el(tag, cls, html) {
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+
+function codeBlock(label, text) {
+  var wrap = el('div', 'block');
+  var head = el('div', 'block-head');
+  head.appendChild(el('span', null, esc(label)));
+  var btn = el('button', 'copy', 'Копировать');
+  btn.type = 'button';
+  head.appendChild(btn);
+  var pre = document.createElement('pre');
+  pre.textContent = text;
+  wrap.appendChild(head);
+  wrap.appendChild(pre);
+  btn.addEventListener('click', function () {
+    function done(msg) {
+      btn.textContent = msg;
+      setTimeout(function () { btn.textContent = 'Копировать'; }, 2000);
+    }
+    function fallback() {
+      var r = document.createRange();
+      r.selectNodeContents(pre);
+      var s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+      done('Выделено, скопируй вручную');
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { done('Скопировано'); }, fallback);
+    } catch (err) { fallback(); }
+  });
+  return wrap;
+}
+
+var BASE_CSS = ':host { display: block; background: #ffffff; color: #1f2d3d; font: 16px/1.5 Arial, Helvetica, sans-serif; padding: 14px; }\nimg { max-width: 100%; }\n';
+
+function preview(ex) {
+  var demo = ex.demo || { html: ex.html, css: ex.css };
+  var html = demo.html || '';
+  var css = demo.css || '';
+  // картинки из примеров заменяем заглушкой, чтобы результат был виден
+  html = html.replace(/(<img[^>]*?\ssrc=")[^"]*(")/gi, function (m, a, b) { return a + IMG + b; });
+  css = css.replace(/url\((['"]?)[^)'"]*\1\)/g, function () { return 'url("' + IMG + '")'; });
+  css = css.replace(/@import[^;]*;/g, '');
+  css = css.replace(/(^|[\s,}])body\s*\{/g, function (m, a) { return a + ':host {'; });
+
+  var wrap = el('div', 'preview-wrap');
+  wrap.appendChild(el('div', 'preview-label', 'Как выглядит на сайте'));
+  var host = el('div', 'preview');
+  if (ex.minH) host.style.minHeight = ex.minH + 'px';
+  if (host.attachShadow) {
+    var root = host.attachShadow({ mode: 'open' });
+    var st = document.createElement('style');
+    st.textContent = BASE_CSS + css;
+    var stage = document.createElement('div');
+    stage.innerHTML = html;
+    root.appendChild(st);
+    root.appendChild(stage);
+    // Ссылки и формы в примерах никуда не ведут
+    root.addEventListener('click', function (e) {
+      var n = e.target;
+      while (n && n !== root) {
+        if (n.tagName === 'A') { e.preventDefault(); break; }
+        n = n.parentNode;
+      }
+    });
+    root.addEventListener('submit', function (e) { e.preventDefault(); });
+  } else {
+    host.textContent = 'Этот браузер не показывает предпросмотр.';
+  }
+  wrap.appendChild(host);
+  if (ex.hint) wrap.appendChild(el('div', 'hint', esc(ex.hint)));
+  return wrap;
+}
+
+function glossBlock(ex) {
+  var items = glossary(ex);
+  if (!items.length) return null;
+  var box = el('div', 'gloss');
+  box.appendChild(el('div', 'gloss-title', 'Что значат слова из кода'));
+  var ul = document.createElement('ul');
+  items.forEach(function (it) {
+    ul.appendChild(el('li', null, '<code class="i">' + esc(it[0]) + '</code> ' + esc(it[1])));
+  });
+  box.appendChild(ul);
+  return box;
+}
+
+var panel = document.getElementById('panel');
+var tabsBox = document.getElementById('tabs');
+
+function render(id) {
+  var sec = null;
+  for (var i = 0; i < SECTIONS.length; i++) if (SECTIONS[i].id === id) sec = SECTIONS[i];
+  if (!sec) sec = SECTIONS[0];
+  var tabs = tabsBox.querySelectorAll('.tab');
+  for (var t = 0; t < tabs.length; t++) {
+    tabs[t].setAttribute('aria-selected', tabs[t].getAttribute('data-id') === sec.id ? 'true' : 'false');
+  }
+  panel.innerHTML = '';
+  panel.appendChild(el('h2', null, esc(sec.title)));
+  var theory = el('div', 'theory');
+  sec.theory.forEach(function (p) { theory.appendChild(el('p', null, fmt(p))); });
+  panel.appendChild(theory);
+  sec.examples.forEach(function (ex) {
+    var box = el('div', 'ex');
+    var head = el('div', 'ex-head');
+    head.appendChild(el('h3', null, esc(ex.cap)));
+    if (ex.tag === 'extra') head.appendChild(el('span', 'badge', 'Дополнение'));
+    if (ex.tag === 'web') head.appendChild(el('span', 'badge', 'Из интернета'));
+    box.appendChild(head);
+    if (ex.warn) box.appendChild(el('p', 'warn', fmt(ex.warn)));
+    (ex.files || []).forEach(function (f) { box.appendChild(codeBlock(f.label, f.text)); });
+    if (ex.html) box.appendChild(codeBlock('HTML', ex.html));
+    if (ex.css) box.appendChild(codeBlock('CSS', ex.css));
+    if (ex.js) box.appendChild(codeBlock('JavaScript', ex.js));
+    if (!ex.nopreview && (ex.demo || ex.html || ex.css)) box.appendChild(preview(ex));
+    var g = glossBlock(ex);
+    if (g) box.appendChild(g);
+    box.appendChild(el('p', 'note', fmt(ex.note)));
+    if (ex.tag === 'web' && ex.url) {
+      var s = el('p', 'src', 'Источник: ');
+      var a = document.createElement('a');
+      a.href = ex.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = ex.urlLabel || ex.url;
+      s.appendChild(a);
+      box.appendChild(s);
+    }
+    panel.appendChild(box);
+  });
+}
+
+SECTIONS.forEach(function (s) {
+  var b = el('button', 'tab', esc(s.title));
+  b.type = 'button';
+  b.setAttribute('role', 'tab');
+  b.setAttribute('data-id', s.id);
+  b.addEventListener('click', function () {
+    try { location.hash = s.id; } catch (e) {}
+    render(s.id);
+  });
+  tabsBox.appendChild(b);
+});
+
+function fromHash() {
+  var h = '';
+  try { h = (location.hash || '').replace('#', ''); } catch (e) {}
+  render(h);
+}
+window.addEventListener('hashchange', fromHash);
+fromHash();
+</script>
+
+</body></html>
